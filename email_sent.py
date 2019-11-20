@@ -15,7 +15,7 @@ receiver_email = os.getenv("RECEIVER_EMAIL")
 
 csv_path = "/Users/Pete/Desktop/Pi/tweetbot/bot/twit.csv"
 search_fraze = "movement director"
-subject = "Movoment Director tweets"
+subject = "Movement Director tweets"
 #port = 1025 test port
 
 
