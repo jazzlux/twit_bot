@@ -1,5 +1,6 @@
 import os
 import csv
+import re
 
 class Filter():
     def __init__(self, file, frase):
@@ -13,13 +14,13 @@ class Filter():
             self.reader = csv.reader(csvfile)
             for i in self.reader:
                 for words in i:
-                    if self.search_frase in words:
+                    x = re.search(self.search_frase, i[0], re.IGNORECASE)
+                    if x is not None :
                         self.lista_twit.append(i)
-                    else:
-                        pass
+                
             return self.lista_twit
 
 
 if __name__=='__main__':
-	f = Filter('twit.csv', 'Director')
+	f = Filter('twit.csv', 'test_frase')
 	print(f.filter_file())

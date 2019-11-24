@@ -11,7 +11,7 @@ consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 csv_path = "/Users/Pete/Desktop/Pi/tweetbot/bot/twit.csv"
-keywords_to_listen = "movement director choreographer"
+keywords_to_listen = "your frase"
 
 # try:
 #     api.verify_credentials()
@@ -35,10 +35,13 @@ class MyStreamListener(tweepy.StreamListener):
         self.me = api.me()
 
     def on_status(self, status):
-            t = status.text
+            try:
+                t = status.extended_tweet['full_text']
+            except AttributeError:
+                t = status.text
             twit = []
-            twit.append(t.lower())
-            #print(twit)
+            twit.append(t)
+            print(twit)
             with open(csv_path, mode='a', encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow(twit)
@@ -56,7 +59,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True,
 
 
 tweets_listener = MyStreamListener(api)
-stream = tweepy.Stream(api.auth, tweets_listener)
+stream = tweepy.Stream(api.auth, tweets_listener, tweet_mode='extended')
 stream.filter(track=[keywords_to_listen], languages=["en"])
 
 
