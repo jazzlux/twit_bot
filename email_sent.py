@@ -1,4 +1,3 @@
-
 import os
 import smtplib, ssl
 from filter import Filter
@@ -13,7 +12,7 @@ password = os.getenv("EMAIL_PASSWORD")
 sender_email = os.getenv("MY_EMAIL")
 receiver_email = os.getenv("RECEIVER_EMAIL")
 
-csv_path = "/Users/Pete/Desktop/Pi/tweetbot/bot/twit.csv"
+csv_path = "/home/pi/Desktop/twitbot/bot/movement_twits.csv"
 search_fraze = "movement director"
 subject = "Movement Director tweets"
 #port = 1025 test port
@@ -46,19 +45,15 @@ def email_real():
     body = creating_body()
     context = ssl.create_default_context()
     if len(text) >0:
-        put = input("there are {} new tweet/s, do you want send email ? y/n ".format(len(text)))
+        meseg.attach(MIMEText(body, 'plain'))
+        print(body)
+        print(len(text))
+        with smtplib.SMTP('smtp.zenbox.pl', port) as server:
+            server.set_debuglevel(1)
+            server.starttls(context=context) # Secure the connection
+            server.login(sender_email, password)
+            server.send_message(meseg)
 
-        if put == 'y':
-            meseg.attach(MIMEText(body, 'plain'))
-            #print(body)
-            with smtplib.SMTP('smtp.zenbox.pl', port) as server:
-                server.set_debuglevel(1)
-                server.starttls(context=context) # Secure the connection
-                server.login(sender_email, password)
-                server.send_message(meseg)
-
-        else:
-            pass
     else:
         print("no keyword")
 

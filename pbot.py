@@ -10,8 +10,10 @@ consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
-csv_path = "/Users/Pete/Desktop/Pi/tweetbot/bot/twit.csv"
-keywords_to_listen = "movement director choreographer"
+csv_path = "/home/pi/Desktop/twitbot/bot/movement_twits.csv"
+#csv_path = "/home/pi/Desktop/twitbot/bot/test.csv"
+#keywords_to_listen = "brexit"
+keywords_to_listen = "movement director"
 
 # try:
 #     api.verify_credentials()
@@ -35,11 +37,15 @@ class MyStreamListener(tweepy.StreamListener):
         self.me = api.me()
 
     def on_status(self, status):
-            t = status.text
+            try:
+                t = status.extended_tweet['full_text']
+            except AttributeError:
+                #t='none'
+                t = status.text
             twit = []
-            twit.append(t.lower())
-            #print(twit)
-            with open(csv_path, mode='a', encoding='utf-8') as csvfile:
+            twit.append(t)
+            print(twit)
+            with open(csv_path, mode='a', encoding='UTF-8') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow(twit)
 
@@ -56,8 +62,11 @@ api = tweepy.API(auth, wait_on_rate_limit=True,
 
 
 tweets_listener = MyStreamListener(api)
-stream = tweepy.Stream(api.auth, tweets_listener)
+stream = tweepy.Stream(api.auth, tweets_listener, tweet_mode='extended')
 stream.filter(track=[keywords_to_listen], languages=["en"])
 
 
 # locations=[-9.0869,39.8009,-7.1542,40.5007]
+"""File "/home/pi/Desktop/twitbot/tweet_env/lib/python3.5/site-packages/urllib3/response.py", line 430, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.")
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='stream.twitter.com', port=443): Read timed out."""
