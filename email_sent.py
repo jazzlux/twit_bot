@@ -83,3 +83,4 @@ def email_send():
 
 #email_send()
 email_real()
+#TODO - seatch frases from dictionary of keywords
