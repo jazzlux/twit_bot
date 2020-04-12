@@ -27,9 +27,9 @@ def searchForJobs(searchFrase):
 	return jobsList
 
 
-lista = searchForJobs('graphQL')
+lista = searchForJobs('software engineer')
 # print(lista)
 
 #save results to a file.
-with open("jsonList.json", mode='a') as file:
+with open("jsonList.json", mode='w') as file:
 	json.dump(lista, file)
